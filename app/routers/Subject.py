@@ -1,8 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+import csv
+import io
 from sqlalchemy.orm import Session
 from typing import List
 import controller
 import schemas
+import models
 from db import get_db
 
 subject_router = APIRouter(
@@ -43,3 +46,37 @@ def delete_subject(subject_id: int, db: Session = Depends(get_db)):
     if db_subject is None:
         raise HTTPException(status_code=404, detail="Subject not found")
     return {"detail": "Subject deleted"}
+
+@subject_router.post("/upload_csv/", response_model=List[schemas.Subject])
+async def upload_subjects_csv(
+    file: UploadFile = File(...), db: Session = Depends(get_db)
+):
+    if file.content_type != 'text/csv':
+        raise HTTPException(status_code=400, detail="Invalid file type. Expected CSV.")
+
+    content = await file.read()
+    reader = csv.DictReader(io.StringIO(content.decode('utf-8')))
+
+    subjects = []
+    for row in reader:
+        try:
+            # Find or create department by name
+            dept_name = row['dept_name']
+            db_department = db.query(models.Department).filter(models.Department.name == dept_name).first()
+            if not db_department:
+                # Create the department if it doesn't exist
+                department_data = schemas.DepartmentCreate(name=dept_name)
+                db_department = controller.create_department(db, department_data)
+
+            subject_data = schemas.SubjectCreate(
+                title=row['title'],
+                credithours=int(row['credithours']),
+                dept_id=db_department.id
+            )
+            db_subject = controller.create_subject(db=db, subject=subject_data)
+            subjects.append(db_subject)
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=400, detail=f"Error processing row {row}: {str(e)}")
+
+    return subjects

@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+import csv
+import io
 from sqlalchemy.orm import Session, joinedload
 from typing import List
 import controller
@@ -43,3 +45,28 @@ def delete_teacher(teacher_id: int, db: Session = Depends(get_db)):
     if db_teacher is None:
         raise HTTPException(status_code=404, detail="Teacher not found")
     return {"detail": "Teacher deleted"}
+
+@teacher_router.post("/upload_csv/", response_model=List[schemas.Teacher])
+async def upload_teachers_csv(
+    file: UploadFile = File(...), db: Session = Depends(get_db)
+):
+    if file.content_type != 'text/csv':
+        raise HTTPException(status_code=400, detail="Invalid file type. Expected CSV.")
+
+    content = await file.read()
+    reader = csv.DictReader(io.StringIO(content.decode('utf-8')))
+
+    teachers = []
+    for row in reader:
+        try:
+            teacher_data = schemas.TeacherCreate(
+                name=row['name'],
+                contact=row['contact']
+            )
+            db_teacher = controller.create_teacher(db=db, teacher=teacher_data)
+            teachers.append(db_teacher)
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=400, detail=f"Error processing row {row}: {str(e)}")
+
+    return teachers
