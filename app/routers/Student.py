@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session, joinedload
 from typing import List
-from app import controller, schemas, models
+import controller
+import schemas
+import models
 from db import get_db
 
 student_router = APIRouter(

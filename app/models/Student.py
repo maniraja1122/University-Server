@@ -7,7 +7,7 @@ class Student(Base):
     __tablename__ = 'student'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String(255))
     dob = Column(Date)
     # Relationships
     enrollments = relationship('Enrolled', back_populates='student')

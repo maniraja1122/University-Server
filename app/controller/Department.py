@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
-from app import models, schemas
+import models
+import schemas
 
 # Departments
 

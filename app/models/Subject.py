@@ -7,7 +7,7 @@ class Subject(Base):
     __tablename__ = 'subject'
 
     id = Column(Integer, primary_key=True)
-    title = Column(String)
+    title = Column(String(255))
     credithours = Column(Integer)
     dept_id = Column(Integer, ForeignKey('department.id'))
 

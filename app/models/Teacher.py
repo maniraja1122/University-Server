@@ -7,8 +7,8 @@ class Teacher(Base):
     __tablename__ = 'teacher'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    contact = Column(String)
+    name = Column(String(255))
+    contact = Column(String(255))
 
     # Relationships
     teaching_assignments = relationship('SubjectsTaught', back_populates='teacher')
