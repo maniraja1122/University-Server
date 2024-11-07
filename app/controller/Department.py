@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import models
 import schemas
 
-# Departments
+# Departments CRUD Functions
 
 def get_department(db: Session, department_id: int):
     return db.query(models.Department).filter(models.Department.id == department_id).first()

@@ -14,6 +14,7 @@ enrollment_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+# Payload Functions
 @enrollment_router.post("/", response_model=schemas.Enrollment)
 def create_enrollment(enrollment: schemas.EnrollmentCreate, db: Session = Depends(get_db)):
     db_student = controller.get_student(db, student_id=enrollment.student_id)
@@ -36,6 +37,7 @@ def delete_enrollment(enrollment_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Enrollment not found")
     return {"detail": "Enrollment deleted"}
 
+# CSV Function
 @enrollment_router.post("/upload_csv/", response_model=List[schemas.Enrollment])
 async def upload_enrollments_csv(
     file: UploadFile = File(...), db: Session = Depends(get_db)

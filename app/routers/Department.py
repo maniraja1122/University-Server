@@ -13,6 +13,7 @@ department_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+# Payload Functions
 @department_router.post("/", response_model=schemas.Department)
 def create_department(department: schemas.DepartmentCreate, db: Session = Depends(get_db)):
     return controller.create_department(db=db, department=department)
@@ -43,6 +44,7 @@ def delete_department(department_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Department not found")
     return {"detail": "Department deleted"}
 
+# CSV Function
 @department_router.post("/upload_csv/", response_model=List[schemas.Department])
 async def upload_departments_csv(
     file: UploadFile = File(...), db: Session = Depends(get_db)

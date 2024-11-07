@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import models
 import schemas
 
-# Subjects Taught
+# Subjects Taught CRUD Functions
 
 def get_subject_taught(db: Session, subject_taught_id: int):
     return db.query(models.SubjectsTaught).filter(models.SubjectsTaught.id == subject_taught_id).first()

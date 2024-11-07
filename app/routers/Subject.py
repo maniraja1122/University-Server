@@ -14,6 +14,7 @@ subject_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+# Payload Functions
 @subject_router.post("/", response_model=schemas.Subject)
 def create_subject(subject: schemas.SubjectCreate, db: Session = Depends(get_db)):
     db_department = controller.get_department(db=db, department_id=subject.dept_id)
@@ -47,6 +48,7 @@ def delete_subject(subject_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Subject not found")
     return {"detail": "Subject deleted"}
 
+# CSV Function
 @subject_router.post("/upload_csv/", response_model=List[schemas.Subject])
 async def upload_subjects_csv(
     file: UploadFile = File(...), db: Session = Depends(get_db)

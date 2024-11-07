@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import models
 import schemas
 
-# Subjects
+# Subjects CRUD Functions
 
 def get_subject(db: Session, subject_id: int):
     return db.query(models.Subject).filter(models.Subject.id == subject_id).first()

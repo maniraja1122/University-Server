@@ -3,7 +3,7 @@ from sqlalchemy import or_
 import models
 import schemas
 
-# Enrollments
+# Enrollments CRUD Functions
 
 def get_enrollment(db: Session, enrollment_id: int):
     return db.query(models.Enrolled).filter(models.Enrolled.id == enrollment_id).first()

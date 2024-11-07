@@ -15,6 +15,7 @@ student_router = APIRouter(
     responses={404: {"description": "Not found"}},
 )
 
+# Payload Functions
 @student_router.post("/", response_model=schemas.Student)
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
     return controller.create_student(db=db, student=student)
@@ -47,6 +48,7 @@ def delete_student(student_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Student not found")
     return {"detail": "Student deleted"}
 
+# CSV Function
 @student_router.post("/upload_csv/", response_model=List[schemas.Student])
 async def upload_students_csv(
     file: UploadFile = File(...), db: Session = Depends(get_db)
