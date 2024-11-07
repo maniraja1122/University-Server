@@ -32,6 +32,7 @@ Install the required packages.
 pip install -r requirements.txt
 ```
 
+Run the server locally:
 ```
 fastapi dev main.py
 ```
