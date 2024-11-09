@@ -1,3 +1,5 @@
+## University API Server
+
 This project will be used to create an API server with MYSQL Backend using the following tools:
 
 - FastAPI
@@ -15,7 +17,7 @@ Use this [link](https://dbdiagram.io/d/672b3730e9daa85aca7ede61) to view online.
 
 ## Usage
 
-### Run Locally
+### Run Locally [Requires Database Setup]
 
 Follow the steps to setup this project.
 
