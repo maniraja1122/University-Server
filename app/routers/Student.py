@@ -16,15 +16,18 @@ student_router = APIRouter(
 )
 
 # Payload Functions
+# Create Student Based on Schema POST Request
 @student_router.post("/", response_model=schemas.Student)
 def create_student(student: schemas.StudentCreate, db: Session = Depends(get_db)):
     return controller.create_student(db=db, student=student)
 
+# Get Multiple Students
 @student_router.get("/", response_model=List[schemas.Student])
 def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     students = controller.get_students(db, skip=skip, limit=limit)
     return students
 
+# Get Student based on ID
 @student_router.get("/{student_id}", response_model=schemas.Student)
 def read_student(student_id: int, db: Session = Depends(get_db)):
     db_student = db.query(models.Student).filter(models.Student.id == student_id).options(
@@ -34,6 +37,7 @@ def read_student(student_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Student not found")
     return db_student
 
+# Update Student based on ID
 @student_router.put("/{student_id}", response_model=schemas.Student)
 def update_student(student_id: int, student: schemas.StudentCreate, db: Session = Depends(get_db)):
     db_student = controller.update_student(db=db, student_id=student_id, student=student)
@@ -41,6 +45,7 @@ def update_student(student_id: int, student: schemas.StudentCreate, db: Session 
         raise HTTPException(status_code=404, detail="Student not found")
     return db_student
 
+# Delete Student based on ID
 @student_router.delete("/{student_id}")
 def delete_student(student_id: int, db: Session = Depends(get_db)):
     db_student = controller.delete_student(db=db, student_id=student_id)

@@ -15,15 +15,18 @@ teacher_router = APIRouter(
 )
 
 # Payload Functions
+# Create Teacher Based on Schema POST Request
 @teacher_router.post("/", response_model=schemas.Teacher)
 def create_teacher(teacher: schemas.TeacherCreate, db: Session = Depends(get_db)):
     return controller.create_teacher(db=db, teacher=teacher)
 
+# Get Multiple Teachers
 @teacher_router.get("/", response_model=List[schemas.Teacher])
 def read_teachers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     teachers = controller.get_teachers(db, skip=skip, limit=limit)
     return teachers
 
+# Get Teacher based on ID
 @teacher_router.get("/{teacher_id}", response_model=schemas.Teacher)
 def read_teacher(teacher_id: int, db: Session = Depends(get_db)):
     db_teacher = db.query(models.Teacher).filter(models.Teacher.id == teacher_id).options(
@@ -33,6 +36,7 @@ def read_teacher(teacher_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Teacher not found")
     return db_teacher
 
+# Update Teacher based on ID
 @teacher_router.put("/{teacher_id}", response_model=schemas.Teacher)
 def update_teacher(teacher_id: int, teacher: schemas.TeacherCreate, db: Session = Depends(get_db)):
     db_teacher = controller.update_teacher(db=db, teacher_id=teacher_id, teacher=teacher)
@@ -40,6 +44,7 @@ def update_teacher(teacher_id: int, teacher: schemas.TeacherCreate, db: Session 
         raise HTTPException(status_code=404, detail="Teacher not found")
     return db_teacher
 
+# Delete Teacher based on ID
 @teacher_router.delete("/{teacher_id}")
 def delete_teacher(teacher_id: int, db: Session = Depends(get_db)):
     db_teacher = controller.delete_teacher(db=db, teacher_id=teacher_id)

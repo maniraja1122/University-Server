@@ -15,6 +15,7 @@ enrollment_router = APIRouter(
 )
 
 # Payload Functions
+# Create Enrollment Based on Schema POST Request
 @enrollment_router.post("/", response_model=schemas.Enrollment)
 def create_enrollment(enrollment: schemas.EnrollmentCreate, db: Session = Depends(get_db)):
     db_student = controller.get_student(db, student_id=enrollment.student_id)
@@ -25,11 +26,13 @@ def create_enrollment(enrollment: schemas.EnrollmentCreate, db: Session = Depend
         raise HTTPException(status_code=404, detail="Subject not found")
     return controller.create_enrollment(db=db, enrollment=enrollment)
 
+# Get Multiple Enrollments
 @enrollment_router.get("/", response_model=List[schemas.Enrollment])
 def read_enrollments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     enrollments = controller.get_enrollments(db, skip=skip, limit=limit)
     return enrollments
 
+# Delete Enrollment based on ID
 @enrollment_router.delete("/{enrollment_id}")
 def delete_enrollment(enrollment_id: int, db: Session = Depends(get_db)):
     db_enrollment = controller.delete_enrollment(db=db, enrollment_id=enrollment_id)
