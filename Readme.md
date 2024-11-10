@@ -21,9 +21,10 @@ Use this [link](https://dbdiagram.io/d/672b3730e9daa85aca7ede61) to view online.
 
 Follow the steps to setup this project.
 
-Go to the Project Folder and run the command:
+Optional: Go to the Project Folder and run the command to create and use a virtual environment:
 
 ```
+python3 -m venv env
 source env/bin/activate
 ```
 
